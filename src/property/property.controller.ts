@@ -16,25 +16,23 @@ import {
 import { CreatePropertyDto } from './dto/createProperty.dto';
 import { IdParamDto } from './dto/idParam.dto';
 import { ParseIdPipe } from './pipes/parseIdpipe';
-import { ZodValidationPipe } from '../schedule/pipes/zodValidationPipe';
-import {
-  CreatePropertyZodSchema,
-  createPropertySchema,
-} from '../schedule/dto/createPropertyZod.dto';
 import { HeadersDto } from './dto/headers.dto';
 import { RequestHeader } from './pipes/request-header';
+import { PropertyService } from './property.service';
 
 @Controller('property')
 export class PropertyController {
+  constructor(private propertyService: PropertyService) {}
+
   @Get()
   findAll() {
-    return 'All properties';
+    return this.propertyService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     console.log(typeof id);
-    return id;
+    return this.propertyService.findOne();
   }
 
   @Post()
@@ -47,7 +45,7 @@ export class PropertyController {
   create(@Body() body: CreatePropertyDto) {
     // console.log(headers);
 
-    return body;
+    return this.propertyService.create();
   }
 
   @Patch(':id')
@@ -62,7 +60,7 @@ export class PropertyController {
   //   ParseIdPipe - ручное преобразование донных
   updateOne(@Param('id', ParseIdPipe) id, @Body() dto: CreatePropertyDto) {
     console.log(typeof id);
-    return dto;
+    return this.propertyService.update();
   }
 
   @Patch('headers/:id')

@@ -11,7 +11,7 @@ export class CreatePropertyDto {
 
   @IsInt()
   @IsPositive()
-  area: number;
+  price: number;
 }
 
 // Группы не работают при глобальной проверке

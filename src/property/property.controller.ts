@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Headers,
   HttpCode,
@@ -19,6 +20,7 @@ import { ParseIdPipe } from './pipes/parseIdpipe';
 import { HeadersDto } from './dto/headers.dto';
 import { RequestHeader } from './pipes/request-header';
 import { PropertyService } from './property.service';
+import { UpdatePropertyDto } from './dto/updateProperty.dto';
 
 @Controller('property')
 export class PropertyController {
@@ -30,9 +32,9 @@ export class PropertyController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    console.log(typeof id);
-    return this.propertyService.findOne();
+  //   indOne(@Param('id', ParseIntPipe) id: number) ParseIdPipe - использовал для преобразования строки в число (мой кастомный pipe)
+  findOne(@Param('id') id: string) {
+    return this.propertyService.findOne(id);
   }
 
   @Post()
@@ -42,10 +44,8 @@ export class PropertyController {
   //       forbidNonWhitelisted: true,
   //     }),
   //   )
-  create(@Body() body: CreatePropertyDto) {
-    // console.log(headers);
-
-    return this.propertyService.create();
+  create(@Body() dto: CreatePropertyDto) {
+    return this.propertyService.create(dto);
   }
 
   @Patch(':id')
@@ -58,9 +58,14 @@ export class PropertyController {
   //     }),
   //   )
   //   ParseIdPipe - ручное преобразование донных
-  updateOne(@Param('id', ParseIdPipe) id, @Body() dto: CreatePropertyDto) {
-    console.log(typeof id);
-    return this.propertyService.update();
+  //   updateOne(@Param('id', ParseIdPipe) id, @Body() dto: CreatePropertyDto) ParseIdPipe - использовал для преобразования строки в число (мой кастомный pipe)
+  updateOne(@Param('id') id, @Body() dto: UpdatePropertyDto) {
+    return this.propertyService.update(id, dto);
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: string) {
+    return this.propertyService.delete(id);
   }
 
   @Patch('headers/:id')
@@ -68,6 +73,6 @@ export class PropertyController {
     @RequestHeader(HeadersDto)
     headers: HeadersDto,
   ) {
-    return headers;
+    return 'headers';
   }
 }

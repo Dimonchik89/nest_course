@@ -18,7 +18,9 @@ export class Property {
   @OneToOne(
     () => PropertyFeature,
     (propertyFeature) => propertyFeature.property,
-    { cascade: true }, // при удалении конкретной таблицы property будет удалены и связанная с ней propertyFeature
+    {
+      cascade: true, // сохраняет сразу и property и propertyFeature
+    },
   )
   propertyFeature: PropertyFeature;
 }

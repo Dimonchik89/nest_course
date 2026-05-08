@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, Query } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  Query,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Property } from '../entities/property.entity';
 import { Repository } from 'typeorm';
@@ -60,12 +65,23 @@ export class PropertyService {
 
   async createPropertyFeature(dto: any) {
     const { propertyId, ...tailDto } = dto;
-    const property = await this.propertyRepository.findOne({
+    const existing = await this.propertyFeatureRepository.findOne({
       where: {
-        id: propertyId,
+        property: {
+          id: propertyId,
+        },
       },
     });
 
-    return await this.propertyFeatureRepository.save({ ...tailDto, property });
+    if (existing) {
+      throw new BadRequestException('Property feature already exists');
+    }
+
+    const propertyFeature = this.propertyFeatureRepository.create({
+      ...tailDto,
+      property: { id: propertyId },
+    });
+
+    return await this.propertyFeatureRepository.save(propertyFeature);
   }
 }

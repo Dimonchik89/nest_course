@@ -33,7 +33,9 @@ export class PropertyFeature {
   @Column()
   hasBalcony: boolean;
 
-  @OneToOne(() => Property, (property) => property.propertyFeature)
-  @JoinColumn()
+  @OneToOne(() => Property, (property) => property.propertyFeature, {
+    onDelete: 'CASCADE', // при удалении конкретной таблицы property будет удалены и связанная с ней propertyFeature
+  })
+  @JoinColumn({ name: 'propertyId' })
   property: Property;
 }

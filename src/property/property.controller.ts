@@ -68,6 +68,13 @@ export class PropertyController {
     return this.propertyService.delete(id);
   }
 
+  @Post('feature')
+  createPropertyFeature(@Body() dto: any) {
+    console.log(dto);
+
+    return this.propertyService.createPropertyFeature(dto);
+  }
+
   @Patch('headers/:id')
   validationHeaders(
     @RequestHeader(HeadersDto)

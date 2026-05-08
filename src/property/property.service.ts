@@ -1,15 +1,18 @@
 import { Injectable, NotFoundException, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Property } from './entities/property.entity';
+import { Property } from '../entities/property.entity';
 import { Repository } from 'typeorm';
 import { CreatePropertyDto } from './dto/createProperty.dto';
 import { UpdatePropertyDto } from './dto/updateProperty.dto';
+import { PropertyFeature } from '../entities/propertyFeature.entity';
 
 @Injectable()
 export class PropertyService {
   constructor(
     @InjectRepository(Property)
     private propertyRepository: Repository<Property>,
+    @InjectRepository(PropertyFeature)
+    private propertyFeatureRepository: Repository<PropertyFeature>,
   ) {}
 
   async findAll() {
@@ -20,6 +23,20 @@ export class PropertyService {
     const property = await this.propertyRepository.findOne({
       where: {
         id,
+      },
+      relations: ['propertyFeature'], // добавляем если в получаемом обьекте нужны связаные таблицы
+      select: {
+        // добавляем если из связанных таблиц нужны не все поля а только некоторые, выбираем нужные
+        propertyFeature: {
+          id: true,
+          bedrooms: true,
+          bathrooms: true,
+          parkingSpots: true,
+          area: true,
+          hasSwimmingPool: true,
+          hasGardenYard: true,
+          hasBalcony: true,
+        },
       },
     });
 
@@ -39,5 +56,16 @@ export class PropertyService {
     return await this.propertyRepository.delete({
       id,
     });
+  }
+
+  async createPropertyFeature(dto: any) {
+    const { propertyId, ...tailDto } = dto;
+    const property = await this.propertyRepository.findOne({
+      where: {
+        id: propertyId,
+      },
+    });
+
+    return await this.propertyFeatureRepository.save({ ...tailDto, property });
   }
 }

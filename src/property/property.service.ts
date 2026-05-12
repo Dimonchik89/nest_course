@@ -50,7 +50,14 @@ export class PropertyService {
   }
 
   async create(dto: CreatePropertyDto) {
-    return await this.propertyRepository.save(dto);
+    const { userId, ...tailDto } = dto;
+
+    return await this.propertyRepository.save({
+      ...tailDto,
+      user: {
+        id: userId,
+      },
+    });
   }
 
   async update(id: string, dto: UpdatePropertyDto) {

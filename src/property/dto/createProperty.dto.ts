@@ -1,4 +1,4 @@
-import { IsInt, IsPositive, IsString, Length } from 'class-validator';
+import { IsInt, IsPositive, IsString, IsUUID, Length } from 'class-validator';
 
 export class CreatePropertyDto {
   @IsString()
@@ -12,6 +12,9 @@ export class CreatePropertyDto {
   @IsInt()
   @IsPositive()
   price: number;
+
+  @IsUUID()
+  userId: string;
 }
 
 // Группы не работают при глобальной проверке

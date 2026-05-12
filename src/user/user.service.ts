@@ -14,8 +14,26 @@ export class UserService {
   async findUserById(id: string) {
     const user = await this.userRepository.findOne({
       where: { id },
-      relations: ['properties', 'properties.propertyFeature'],
+      relations: [
+        'properties',
+        'properties.propertyFeature',
+        'likedProperties',
+        'likedProperties.propertyFeature',
+      ],
     });
+
+    // альтернативний варiант (швидший якщо багато записiв в пов'язаних таблицях)
+    // const user = await this.userRepository
+    //   .createQueryBuilder('user')
+    //   .leftJoinAndSelect('user.properties', 'property')
+    //   .leftJoinAndSelect('property.propertyFeature', 'feature')
+    //   .leftJoinAndSelect('user.likedProperties', 'likedProperty')
+    //   .leftJoinAndSelect(
+    //     'likedProperty.propertyFeature',
+    //     'likedPropertyFeature',
+    //   )
+    //   .where('user.id = :id', { id })
+    //   .getOne();
 
     if (!user) {
       throw new NotFoundException('User not found');
@@ -47,5 +65,37 @@ export class UserService {
     await this.findUserById(id);
 
     return await this.userRepository.delete({ id });
+  }
+
+  async likeProperty({
+    userId,
+    propertyId,
+  }: {
+    userId: string;
+    propertyId: string;
+  }) {
+    await this.userRepository
+      .createQueryBuilder()
+      .relation(User, 'likedProperties')
+      .of(userId)
+      .add(propertyId);
+
+    return { message: 'Added to favorites' };
+  }
+
+  async unlikeProperty({
+    userId,
+    propertyId,
+  }: {
+    userId: string;
+    propertyId: string;
+  }) {
+    await this.userRepository
+      .createQueryBuilder()
+      .relation(User, 'likedProperties')
+      .of(userId)
+      .remove(propertyId);
+
+    return { message: 'Removed from favorites' };
   }
 }

@@ -2,6 +2,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -35,4 +36,7 @@ export class Property {
   @ManyToOne(() => User, (user) => user.properties, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: User;
+
+  @ManyToMany(() => User, (user) => user.likedProperties)
+  likedBy: User[];
 }

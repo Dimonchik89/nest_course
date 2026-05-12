@@ -43,4 +43,14 @@ export class UserController {
   deleteOne(@Param('id') id: string) {
     return this.userService.deleteOne(id);
   }
+
+  @Post('like-property')
+  likeProperty(@Body() dto: { userId: string; propertyId: string }) {
+    return this.userService.likeProperty(dto);
+  }
+
+  @Post('unlike-property')
+  unlikeProperty(@Body() dto: { userId: string; propertyId: string }) {
+    return this.userService.unlikeProperty(dto);
+  }
 }

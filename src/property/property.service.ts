@@ -29,7 +29,7 @@ export class PropertyService {
       where: {
         id,
       },
-      relations: ['propertyFeature'], // добавляем если в получаемом обьекте нужны связаные таблицы
+      relations: ['propertyFeature', 'user'], // добавляем если в получаемом обьекте нужны связаные таблицы
       select: {
         // добавляем если из связанных таблиц нужны не все поля а только некоторые, выбираем нужные
         propertyFeature: {
@@ -41,6 +41,11 @@ export class PropertyService {
           hasSwimmingPool: true,
           hasGardenYard: true,
           hasBalcony: true,
+        },
+        user: {
+          firstName: true,
+          lastName: true,
+          email: true,
         },
       },
     });

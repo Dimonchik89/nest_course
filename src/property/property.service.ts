@@ -26,10 +26,11 @@ export class PropertyService {
     const skip =
       ((paginationDto.page || 1) - 1) *
       (paginationDto.limit ?? DEFAULT_PAGE_SIZE);
+    const take = paginationDto.limit ?? DEFAULT_PAGE_SIZE;
 
     return await this.propertyRepository.find({
-      skip: skip,
-      take: paginationDto.limit ?? DEFAULT_PAGE_SIZE,
+      skip,
+      take,
     });
   }
 

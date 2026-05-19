@@ -4,6 +4,8 @@ import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
+import { PaginationDto } from '../property/dto/pagination.dto';
+import { DEFAULT_PAGE_SIZE } from '../utils/constants';
 
 @Injectable()
 export class UserService {
@@ -42,8 +44,16 @@ export class UserService {
     return user;
   }
 
-  async findAll() {
-    return await this.userRepository.find();
+  async findAll(paginationDto: PaginationDto) {
+    const skip =
+      ((paginationDto.page || 1) - 1) *
+      (paginationDto.limit || DEFAULT_PAGE_SIZE);
+    const take = paginationDto.limit ?? DEFAULT_PAGE_SIZE;
+
+    return await this.userRepository.find({
+      skip,
+      take,
+    });
   }
 
   async findOne(id: string) {

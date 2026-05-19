@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -13,6 +14,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { ConfigService } from '@nestjs/config';
+import { PaginationDto } from '../property/dto/pagination.dto';
 
 @Controller('user')
 export class UserController {
@@ -22,10 +24,10 @@ export class UserController {
   ) {}
 
   @Get()
-  findAll() {
+  findAll(@Query() paginationDto: PaginationDto) {
     console.log('dbPort', this.configService.get('dbPort'));
 
-    return this.userService.findAll();
+    return this.userService.findAll(paginationDto);
   }
 
   @Get(':id')

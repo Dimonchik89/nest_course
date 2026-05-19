@@ -10,6 +10,8 @@ import { Repository } from 'typeorm';
 import { CreatePropertyDto } from './dto/createProperty.dto';
 import { UpdatePropertyDto } from './dto/updateProperty.dto';
 import { PropertyFeature } from '../entities/propertyFeature.entity';
+import { PaginationDto } from './dto/pagination.dto';
+import { DEFAULT_PAGE_SIZE } from '../utils/constants';
 
 @Injectable()
 export class PropertyService {
@@ -20,8 +22,15 @@ export class PropertyService {
     private propertyFeatureRepository: Repository<PropertyFeature>,
   ) {}
 
-  async findAll() {
-    return await this.propertyRepository.find();
+  async findAll(paginationDto: PaginationDto) {
+    const skip =
+      ((paginationDto.page || 1) - 1) *
+      (paginationDto.limit ?? DEFAULT_PAGE_SIZE);
+
+    return await this.propertyRepository.find({
+      skip: skip,
+      take: paginationDto.limit ?? DEFAULT_PAGE_SIZE,
+    });
   }
 
   async findOne(id: string) {

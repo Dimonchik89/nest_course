@@ -21,18 +21,19 @@ import { HeadersDto } from './dto/headers.dto';
 import { RequestHeader } from './pipes/request-header';
 import { PropertyService } from './property.service';
 import { UpdatePropertyDto } from './dto/updateProperty.dto';
+import { PaginationDto } from './dto/pagination.dto';
 
 @Controller('property')
 export class PropertyController {
   constructor(private propertyService: PropertyService) {}
 
   @Get()
-  findAll() {
-    return this.propertyService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.propertyService.findAll(paginationDto);
   }
 
   @Get(':id')
-  //   indOne(@Param('id', ParseIntPipe) id: number) ParseIdPipe - использовал для преобразования строки в число (мой кастомный pipe)
+  //   findOne(@Param('id', ParseIntPipe) id: number) ParseIdPipe - использовал для преобразования строки в число (мой кастомный pipe)
   findOne(@Param('id') id: string) {
     return this.propertyService.findOne(id);
   }

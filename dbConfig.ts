@@ -1,5 +1,5 @@
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
-import { Property } from './entities/property.entity';
+import { Property } from './src/entities/property.entity';
 
 export const pgConfig: PostgresConnectionOptions = {
   type: 'postgres',

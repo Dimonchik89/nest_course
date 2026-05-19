@@ -8,19 +8,21 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import dbConfig from './config/db.config';
+import dbConfigProduction from './config/db.config.production';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true, // можно использовать везде не подключая в других модулях
       expandVariables: true, // можно в env-файле испоьзовать из как переменный url=${dbName}
-      load: [dbConfig],
+      load: [dbConfig, dbConfigProduction],
     }),
     PropertyModule,
     ScheduleModule,
     // TypeOrmModule.forRoot(pgConfig), // использовали просто файл с настройками (данные базы данны были в файле а не env)
     TypeOrmModule.forRootAsync({
-      useFactory: dbConfig,
+      useFactory:
+        process.env.NODE_ENV === 'production' ? dbConfigProduction : dbConfig,
     }),
     UserModule,
   ],

@@ -1,4 +1,5 @@
 import {
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
@@ -9,6 +10,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Property } from './property.entity';
+
+import * as bcrypt from 'bcrypt';
 
 @Entity()
 export class User {
@@ -30,6 +33,9 @@ export class User {
   @CreateDateColumn()
   createdAt: Date;
 
+  @Column()
+  password: string;
+
   @UpdateDateColumn()
   updatedAt: Date;
 
@@ -39,4 +45,9 @@ export class User {
   @ManyToMany(() => Property, (property) => property.likedBy)
   @JoinTable({ name: 'user_liked_properties' })
   likedProperties: Property[];
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
 }

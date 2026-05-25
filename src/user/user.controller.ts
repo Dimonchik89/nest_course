@@ -25,8 +25,6 @@ export class UserController {
 
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {
-    console.log('dbPort', this.configService.get('dbPort'));
-
     return this.userService.findAll(paginationDto);
   }
 

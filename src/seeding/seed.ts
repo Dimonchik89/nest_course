@@ -1,3 +1,5 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { SeederOptions, runSeeders } from 'typeorm-extension';
 // import { pgConfig } from '../../dbConfig'; обьект из файла

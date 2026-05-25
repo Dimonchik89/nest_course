@@ -62,7 +62,10 @@ export class UserService {
 
   async create(dto: CreateUserDto) {
     // додати перевiрку на унiкальнiсть email
-    return await this.userRepository.save(dto);
+
+    // обов'язково спочатку create а потiм save бо в entity додав @BeforeInsert() i для його роботи потрыбна саме така послыдовнiсть
+    const user = await this.userRepository.create(dto);
+    return await this.userRepository.save(user);
   }
 
   async updateOne(dto: UpdateUserDto, id: string) {
